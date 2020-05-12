@@ -107,7 +107,9 @@ const complaint = (data) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(data)
+      body: {
+        "keluhan": JSON.stringify(data.keluhan)
+      }
     })
     .then(res => res.json())
     .then(data => {
