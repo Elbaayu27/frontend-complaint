@@ -99,10 +99,8 @@ const App = () => {
     })
 }
 
-  //Function Modal
-
-  const handleOk = async () => {
-    setConfirmLoading(true);
+const complaint = (data) => {
+  return new Promise(async (resolve, reject) => {
 
     await fetch('https://backend-complaint.herokuapp.com/api-mobile/complaint-create/', {
       method: 'POST',
@@ -114,25 +112,74 @@ const App = () => {
     .then(res => res.json())
     .then(data => {
       //do here
-      console.log(data);
+      // console.log(data);
       if (data.success === true) {
-        setConfirmLoading(false);
-        setVisible(false);
-        //Show modal success
-        success();
+        resolve(data)
+        // setConfirmLoading(false);
+        // setVisible(false);
+        // //Show modal success
+        // success();
 
       }
       else {
-        setVisible(false);
-        setConfirmLoading(false);
-        //Show modal error
-        error();
+        reject('error')
+        // setVisible(false);
+        // setConfirmLoading(false);
+        // //Show modal error
+        // error();
       }
     })
     .catch(err => {
-      console.log(err);
-        setVisible(false);
-        setConfirmLoading(false);
+      reject(err)
+    })
+  })
+} // raw complaint
+
+const rawComplaint = (data) => {
+  return new Promise(async (resolve, reject) => {
+    await fetch('https://backend-complaint.herokuapp.com/api-web/complaint/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(data => {
+      //do here
+      // console.log(data);
+      if (data.success === true) {
+        resolve(data)
+      }
+      else {
+        reject('error')
+      }
+    })
+    .catch(err => {
+      reject(err)
+    })
+  })
+}
+
+  //Function Modal
+
+  const handleOk = async () => {
+    setConfirmLoading(true);
+
+    Promise.all([rawComplaint(data), complaint(data)])
+    .then(response => {
+      console.log(response);
+      setConfirmLoading(false);
+      setVisible(false);
+      //Show modal success
+      success();
+    })
+    .catch(err => {
+      console.log(err)
+      setVisible(false);
+      setConfirmLoading(false);
+      //Show modal error
+      error();
     })
   }
 
