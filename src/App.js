@@ -107,14 +107,14 @@ const complaint = (data) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: {
-        "keluhan": JSON.stringify(data.keluhan)
-      }
+      body: JSON.stringify({
+        "keluhan" : data.keluhan
+      })
     })
     .then(res => res.json())
     .then(data => {
       //do here
-      // console.log(data);
+      console.log(data);
       if (data.success === true) {
         resolve(data)
         // setConfirmLoading(false);
@@ -132,6 +132,7 @@ const complaint = (data) => {
       }
     })
     .catch(err => {
+      console.log(err)
       reject(err)
     })
   })
